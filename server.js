@@ -1,0 +1,43 @@
+const express = require("express")
+const P = require("pino")
+const { default: makeWASocket, useMultiFileAuthState } = require("@whiskeysockets/baileys")
+
+const app = express()
+app.use(express.json())
+
+let sock
+
+async function startSock() {
+    const { state, saveCreds } = await useMultiFileAuthState("auth")
+
+    sock = makeWASocket({
+        logger: P({ level: "silent" }),
+        auth: state
+    })
+
+    sock.ev.on("creds.update", saveCreds)
+
+    sock.ev.on("connection.update", ({ connection }) => {
+        if (connection === "close") {
+            startSock()
+        }
+        if (connection === "open") {
+            console.log("WhatsApp Connected ✅")
+        }
+    })
+}
+
+startSock()
+
+app.get("/", (req, res) => {
+    res.send("Server running")
+})
+
+app.post("/send", async (req, res) => {
+    const { phone, message } = req.body
+    await sock.sendMessage(phone + "@s.whatsapp.net", { text: message })
+    res.send("Message sent")
+})
+
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => console.log("Server running"))
