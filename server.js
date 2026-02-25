@@ -105,12 +105,16 @@ async function startSock() {
       }
 
       if (connection === "close") {
-        global.lastQR = null;
-        isConnecting = false;
-        console.log("Connection closed.");
+  global.lastQR = null;
+  isConnecting = false;
+  
+  const statusCode = lastDisconnect?.error?.output?.statusCode;
+  const errorMessage = lastDisconnect?.error?.message;
+  console.log("Connection closed.");
+  console.log("Close reason code:", statusCode);
+  console.log("Close reason message:", errorMessage);
 
-        const statusCode = lastDisconnect?.error?.output?.statusCode;
-        const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+  const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
         if (shouldReconnect) {
           console.log("Reconnecting in 10 seconds...");
