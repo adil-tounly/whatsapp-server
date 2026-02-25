@@ -12,7 +12,7 @@ app.get("/", (req, res) => {
 let sock
 
 async function startSock() {
-    const { state, saveCreds } = await useMultiFileAuthState("auth")
+    const { state, saveCreds } = await useMultiFileAuthState("/app/auth")
 
     sock = makeWASocket({
         logger: P({ level: "silent" }),
