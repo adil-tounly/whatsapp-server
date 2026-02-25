@@ -82,12 +82,14 @@ async function startSock() {
     const { state, saveCreds } = await useMultiFileAuthState("/data/auth");
     console.log("Auth state loaded ✅");
 
-    sock = makeWASocket({
-      logger: P({ level: "silent" }),
-      auth: state,
-      browser: ["RailwayBot", "Chrome", "1.0.0"],
-    });
-
+   sock = makeWASocket({
+  logger: P({ level: "silent" }),
+  auth: state,
+  browser: ["Ubuntu", "Chrome", "120.0.0"],
+  connectTimeoutMs: 30000,
+  retryRequestDelayMs: 2000,
+  maxRetries: 5,
+});
     sock.ev.on("creds.update", saveCreds);
 
     sock.ev.on("connection.update", async (update) => {
