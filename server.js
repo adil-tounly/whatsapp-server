@@ -113,8 +113,8 @@ async function startSock() {
         const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
 
         if (shouldReconnect) {
-          console.log("Reconnecting in 5 seconds...");
-          setTimeout(() => startSock(), 5000);
+          console.log("Reconnecting in 10 seconds...");
+          setTimeout(() => startSock(), 10000);
         } else {
           console.log("Logged out. Delete /data/auth volume contents and restart.");
         }
