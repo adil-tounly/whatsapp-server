@@ -70,3 +70,6 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port " + PORT);
 });
+
+// 🔥 Prevent Node from exiting
+setInterval(() => {}, 1000);
